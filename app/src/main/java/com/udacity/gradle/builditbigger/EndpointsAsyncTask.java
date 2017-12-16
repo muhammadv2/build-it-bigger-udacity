@@ -62,6 +62,8 @@ class EndpointsAsyncTask extends AsyncTask<Void, Void, String> {
     private void startDisplayJokes(String joke) {
         Intent sendJoke = new Intent(mContext, DisplayJokes.class);
         sendJoke.putExtra(mContext.getString(R.string.joke_key), joke);
+        sendJoke.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+
         mContext.startActivity(sendJoke);
     }
 }
