@@ -14,6 +14,7 @@ android {
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+        multiDexEnabled true
     }
     buildTypes {
         release {
@@ -33,12 +34,9 @@ dependencies {
 
     implementation project(':jokeTeller')
     implementation project(':showjokes')
-    implementation project(path:':backend', configuration:'android-endpoints')
+    implementation project(path: ':backend', configuration: 'android-endpoints')
 
 
     implementation 'com.jakewharton:butterknife:8.8.1'
     annotationProcessor 'com.jakewharton:butterknife-compiler:8.8.1'
-
-    implementation 'com.jakewharton.timber:timber:4.6.0'
-
 }
