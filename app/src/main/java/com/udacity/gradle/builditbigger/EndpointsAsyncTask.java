@@ -1,21 +1,34 @@
 package com.udacity.gradle.builditbigger;
 
+import android.content.Context;
+import android.content.Intent;
 import android.os.AsyncTask;
 
 import com.google.api.client.extensions.android.http.AndroidHttp;
 import com.google.api.client.extensions.android.json.AndroidJsonFactory;
 import com.google.api.client.googleapis.services.AbstractGoogleClientRequest;
 import com.google.api.client.googleapis.services.GoogleClientRequestInitializer;
+import com.opensource.worldwide.showjokes.DisplayJokes;
 import com.udacity.gradle.builditbigger.backend.myApi.MyApi;
 
 import java.io.IOException;
 
+import timber.log.Timber;
+
 class EndpointsAsyncTask extends AsyncTask<Void, Void, String> {
 
-    private static MyApi myApi;
+    private Context mContext;
+
+    public EndpointsAsyncTask(Context context) {
+        mContext = context;
+    }
 
     @Override
+    protected void onPreExecute() {
+        super.onPreExecute();
+    }
 
+    @Override
     protected String doInBackground(Void... voids) {
         MyApi.Builder builder = new MyApi.Builder(AndroidHttp.newCompatibleTransport(), new AndroidJsonFactory(), null)
                 .setRootUrl("http://10.0.2.2:8080/_ah/api/")
@@ -40,4 +53,17 @@ class EndpointsAsyncTask extends AsyncTask<Void, Void, String> {
         return joke;
     }
 
+    @Override
+    protected void onPostExecute(String s) {
+        super.onPostExecute(s);
+
+        startDisplayJokes(s);
+    }
+
+    private void startDisplayJokes(String joke) {
+        Intent sendJoke = new Intent(mContext, DisplayJokes.class);
+        sendJoke.putExtra(mContext.getString(R.string.joke_key), joke);
+        Timber.i("startDisplayJokes: " + joke);
+        mContext.startActivity(sendJoke);
+    }
 }
