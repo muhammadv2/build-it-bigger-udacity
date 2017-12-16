@@ -33,7 +33,7 @@ dependencies {
 
     implementation project(':jokeTeller')
     implementation project(':showjokes')
-    implementation project(path: ':backend', configuration: 'android-endpoints')
+    implementation project(path:':backend', configuration:'android-endpoints')
 
 
     implementation 'com.jakewharton:butterknife:8.8.1'

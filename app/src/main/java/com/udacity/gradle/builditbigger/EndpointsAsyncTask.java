@@ -13,9 +13,10 @@ import java.io.IOException;
 
 class EndpointsAsyncTask extends AsyncTask<Void, Void, String> {
 
+    private static MyApi
     @Override
     protected String doInBackground(Void... voids) {
-        MyApi.Builder builder = new MyApi.Builder(AndroidHttp.newCompatibleTransport(), new AndroidJsonFactory(), null)
+        My.Builder builder = new MyApi.Builder(AndroidHttp.newCompatibleTransport(), new AndroidJsonFactory(), null)
                 .setRootUrl("http://10.0.2.2:8080/_ah/api/")
                 .setApplicationName("backend")
                 .setGoogleClientRequestInitializer(new GoogleClientRequestInitializer() {
