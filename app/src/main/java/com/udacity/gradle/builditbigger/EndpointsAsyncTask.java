@@ -56,14 +56,12 @@ class EndpointsAsyncTask extends AsyncTask<Void, Void, String> {
     @Override
     protected void onPostExecute(String s) {
         super.onPostExecute(s);
-
         startDisplayJokes(s);
     }
 
     private void startDisplayJokes(String joke) {
         Intent sendJoke = new Intent(mContext, DisplayJokes.class);
         sendJoke.putExtra(mContext.getString(R.string.joke_key), joke);
-        Timber.i("startDisplayJokes: " + joke);
         mContext.startActivity(sendJoke);
     }
 }

@@ -7,8 +7,11 @@
 
     <TextView
         android:id="@+id/joke_tv"
+        style="@style/TextAppearance.AppCompat.Medium"
         android:layout_width="wrap_content"
-        android:layout_gravity="center"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:layout_gravity="top"
+        android:layout_margin="@dimen/dp16"
+        android:textColor="@android:color/black" />
 
 </LinearLayout>
