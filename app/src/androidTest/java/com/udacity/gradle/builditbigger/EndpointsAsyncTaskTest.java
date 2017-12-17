@@ -2,11 +2,11 @@ package com.udacity.gradle.builditbigger;
 
 import android.test.AndroidTestCase;
 
-public class EndpointsAsyncTaskTest extends AndroidTestCase{
+public class EndpointsAsyncTaskTest extends AndroidTestCase {
 
     public void test() {
         String joke = null;
-        EndpointsAsyncTask asyncTask = new EndpointsAsyncTask(getContext());
+        EndpointsAsyncTask asyncTask = new EndpointsAsyncTask(getContext(), null);
         asyncTask.execute();
         try {
             joke = asyncTask.get();

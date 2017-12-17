@@ -42,7 +42,6 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void tellJoke(View view) {
-
         ProgressBar progressBar = findViewById(R.id.progressBar1);
         new EndpointsAsyncTask(this, progressBar).execute();
     }
