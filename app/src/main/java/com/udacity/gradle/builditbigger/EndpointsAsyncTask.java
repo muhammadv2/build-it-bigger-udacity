@@ -1,8 +1,11 @@
 package com.udacity.gradle.builditbigger;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
+import android.view.View;
+import android.widget.ProgressBar;
 
 import com.google.api.client.extensions.android.http.AndroidHttp;
 import com.google.api.client.extensions.android.json.AndroidJsonFactory;
@@ -17,15 +20,20 @@ import timber.log.Timber;
 
 class EndpointsAsyncTask extends AsyncTask<Void, Void, String> {
 
+    @SuppressLint("StaticFieldLeak")
     private Context mContext;
+    @SuppressLint("StaticFieldLeak")
+    private ProgressBar mProgressBar;
 
-    public EndpointsAsyncTask(Context context) {
+    public EndpointsAsyncTask(Context context, ProgressBar progressBar) {
         mContext = context;
+        mProgressBar = progressBar;
     }
 
     @Override
     protected void onPreExecute() {
         super.onPreExecute();
+        mProgressBar.setVisibility(View.VISIBLE);
     }
 
     @Override
@@ -56,6 +64,7 @@ class EndpointsAsyncTask extends AsyncTask<Void, Void, String> {
     @Override
     protected void onPostExecute(String s) {
         super.onPostExecute(s);
+        mProgressBar.setVisibility(View.INVISIBLE);
         startDisplayJokes(s);
     }
 
