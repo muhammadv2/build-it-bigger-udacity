@@ -23,7 +23,8 @@ import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.database.MutableData;
+import com.google.firebase.database.Transaction;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -31,6 +32,7 @@ import java.util.Objects;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import timber.log.Timber;
 
 public class RequestedOffersFragment extends Fragment implements RequestedOffersAdapter.OnItemClicked {
 
@@ -85,7 +87,7 @@ public class RequestedOffersFragment extends Fragment implements RequestedOffers
 
                 if (requestedOffer == null) return;
 
-                
+
                 // Find if there emp number associated with the offer
                 if (dataSnapshot.hasChild(Constants.NODE_EMP_NUMBER)) {
                     //If found check the current emp number before adding it to his offers
@@ -145,39 +147,43 @@ public class RequestedOffersFragment extends Fragment implements RequestedOffers
 
         RequestedOffer requestedOffer = offerRequests.get(position);
 
-        offerUnAnsweredRef.addListenerForSingleValueEvent(new ValueEventListener() {
+        offerUnAnsweredRef.child(requestedOffer.getCurrentNodeKey()).runTransaction(new Transaction.Handler() {
+            @NonNull
             @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+            public Transaction.Result doTransaction(@NonNull MutableData mutableData) {
 
-                for (DataSnapshot dataSnapshot1 : dataSnapshot.getChildren()) {
 
-                    if (dataSnapshot1.getKey().equals(requestedOffer.getCurrentNodeKey())) {
-
-                        RequestedOffer innerOffer = dataSnapshot1.getValue(RequestedOffer.class);
-
-                        if (innerOffer.getEmployee() == null) {
-                            offerUnAnsweredRef.child(requestedOffer.getCurrentNodeKey()).child(Constants.CAT_EMPLOYEE).
-                                    setValue(employee.getUid());
-                            Toast.makeText(getContext(), "welcome ", Toast.LENGTH_LONG).show();
-                            offerRequests.remove(requestedOffer);
-                            setUpRecyclerView();
-
-                        } else {
-                            Toast.makeText(getContext(), "Not urs ", Toast.LENGTH_LONG).show();
-                            offerRequests.remove(requestedOffer);
-                            setUpRecyclerView();
-                        }
-                    }
-
+                RequestedOffer o = mutableData.getValue(RequestedOffer.class);
+                if (o == null) {
+                    return Transaction.abort();
                 }
 
+                if (o.getEmployeeKey() == null) {
+                    o.setEmployeeKey(employee.getUid());
+
+                    getActivity().runOnUiThread(() -> Toast.makeText(getActivity(), "Hello", Toast.LENGTH_SHORT).show());
+                    Timber.d("made it  " + o.getEmployeeKey());
+
+                } else {
+                    getActivity().runOnUiThread(() -> Toast.makeText(getActivity(), "NO", Toast.LENGTH_SHORT).show());
+                    Timber.d("Not urs   " + o.getEmployeeKey());
+
+                    return Transaction.abort();
+                }
+
+                mutableData.setValue(o);
+                return Transaction.success(mutableData);
             }
 
             @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
+            public void onComplete(DatabaseError databaseError, boolean b,
+                                   DataSnapshot dataSnapshot) {
+                // check if the transaction completed successfully
+                // or if it failed
 
             }
         });
+
     }
 
 
